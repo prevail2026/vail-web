@@ -115,7 +115,7 @@ function DashboardContent() {
       <div style={styles.wrap}>
         <div style={styles.headRow}>
           <h1 style={{ fontFamily: "var(--font-display)", fontSize: "1.5rem", margin: 0 }}>
-            Customize your profile{user ? ` — ${user.username}` : ""}
+            Welcome{user ? ` — ${user.username}` : ""}
           </h1>
           <form action="/api/auth/logout" method="POST">
             <button type="submit" style={styles.logoutBtn}>Log out</button>
