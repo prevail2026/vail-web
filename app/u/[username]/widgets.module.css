@@ -1,0 +1,83 @@
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin-top: 1.6rem;
+  text-align: left;
+}
+
+.widget {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: 0.65rem;
+  padding: 0.7rem 0.85rem;
+  text-decoration: none;
+  color: var(--text);
+  transition: border-color 0.15s ease;
+}
+
+.widget:hover {
+  border-color: var(--btn-border, var(--border-strong));
+}
+
+.githubAvatar {
+  width: 2.4rem;
+  height: 2.4rem;
+  border-radius: 0.5rem;
+  flex-shrink: 0;
+}
+
+.cover {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 0.4rem;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+
+.widgetBody {
+  min-width: 0;
+  flex: 1;
+}
+
+.widgetTitle {
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.widgetSub {
+  font-size: 0.72rem;
+  color: var(--text-faint);
+  margin-top: 0.1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.progressTrack {
+  height: 3px;
+  background: var(--border-strong);
+  border-radius: 999px;
+  margin-top: 0.45rem;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: var(--accent-c, #a48cff);
+  border-radius: 999px;
+}
+
+.progressTimes {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.62rem;
+  color: var(--text-faint);
+  margin-top: 0.3rem;
+}

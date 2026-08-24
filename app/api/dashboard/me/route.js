@@ -11,6 +11,11 @@ export async function GET(request) {
     .select("*")
     .eq("user_id", session.id)
     .maybeSingle();
+  // never select access_token / refresh_token here — this response goes to the browser
+  const { data: linkedAccounts } = await supabase
+    .from("linked_accounts")
+    .select("provider, provider_username, meta, created_at")
+    .eq("user_id", session.id);
 
-  return Response.json({ user, profile });
+  return Response.json({ user, profile, linkedAccounts: linkedAccounts || [] });
 }

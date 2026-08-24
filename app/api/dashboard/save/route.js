@@ -1,5 +1,6 @@
 import { getSessionFromCookies } from "@/lib/session";
 import { supabase } from "@/lib/supabase";
+import { PROVIDER_IDS } from "@/lib/providers";
 
 const ALLOWED_FONTS = ["JetBrains Mono", "Inter", "Space Grotesk", "IBM Plex Mono"];
 
@@ -24,6 +25,24 @@ export async function POST(request) {
       }))
     : [];
 
+  // A widget can only be enabled if the user actually has that provider
+  // linked — otherwise the profile page would render a widget with nothing
+  // to show. Cross-check against linked_accounts rather than trusting the client.
+  const requestedWidgets = Array.isArray(body.widgets)
+    ? [...new Set(body.widgets)].filter((w) => PROVIDER_IDS.includes(w))
+    : [];
+
+  let widgets = [];
+  if (requestedWidgets.length > 0) {
+    const { data: linked } = await supabase
+      .from("linked_accounts")
+      .select("provider")
+      .eq("user_id", session.id)
+      .in("provider", requestedWidgets);
+    const linkedSet = new Set((linked || []).map((l) => l.provider));
+    widgets = requestedWidgets.filter((w) => linkedSet.has(w));
+  }
+
   const { error } = await supabase
     .from("profiles")
     .update({
@@ -32,6 +51,7 @@ export async function POST(request) {
       accent_color,
       font,
       buttons,
+      widgets,
       updated_at: new Date().toISOString(),
     })
     .eq("user_id", session.id);

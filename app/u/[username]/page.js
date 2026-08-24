@@ -1,5 +1,15 @@
 import { supabase } from "@/lib/supabase";
 import { notFound } from "next/navigation";
+import styles from "./profile.module.css";
+import { ProfileWidgets } from "./widgets";
+
+function hexToRgba(hex, alpha) {
+  const clean = /^#[0-9a-fA-F]{6}$/.test(hex) ? hex : "#a48cff";
+  const r = parseInt(clean.slice(1, 3), 16);
+  const g = parseInt(clean.slice(3, 5), 16);
+  const b = parseInt(clean.slice(5, 7), 16);
+  return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
 
 async function getProfile(username) {
   const { data: user } = await supabase
@@ -19,61 +29,58 @@ async function getProfile(username) {
   return { user, profile };
 }
 
+export async function generateMetadata({ params }) {
+  return { title: `${params.username} — vail` };
+}
+
 export default async function ProfilePage({ params }) {
   const result = await getProfile(params.username);
   if (!result) notFound();
 
   const { user, profile } = result;
+  const accent = profile?.accent_color || "#a48cff";
+  const font = profile?.font || "JetBrains Mono";
   const avatarUrl = user.avatar
     ? `https://cdn.discordapp.com/avatars/${user.id}/${user.avatar}.png?size=256`
     : `https://cdn.discordapp.com/embed/avatars/0.png`;
 
+  const cssVars = {
+    "--accent-c": accent,
+    "--accent-fade": hexToRgba(accent, 0.14),
+    "--btn-border": hexToRgba(accent, 0.45),
+    fontFamily: `${font}, var(--font-mono)`,
+  };
+
   return (
-    <main
-      style={{
-        minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center",
-        background: "#0a0d13", color: "#e7e9ee", fontFamily: `${profile.font}, monospace`,
-        padding: "2rem",
-      }}
-    >
-      <div style={{ textAlign: "center", maxWidth: "26rem" }}>
-        <img
-          src={avatarUrl}
-          alt=""
-          style={{
-            width: "6rem", height: "6rem", borderRadius: "9999px",
-            border: `2px solid ${profile.accent_color}`, marginBottom: "1rem",
-          }}
-        />
-        <h1 style={{ fontSize: "1.75rem", margin: 0, color: profile.accent_color }}>
-          {profile.display_name || user.username}
+    <main className={styles.page} style={cssVars}>
+      <div className={styles.glow} />
+      <div className={styles.card}>
+        <div className={styles.avatarWrap}>
+          <img className={styles.avatar} src={avatarUrl} alt="" />
+        </div>
+        <h1 className={styles.name} style={{ color: accent }}>
+          {profile?.display_name || user.username}
         </h1>
-        {profile.bio && (
-          <p style={{ color: "#9096a3", marginTop: "0.75rem", fontSize: "0.9375rem" }}>
-            {profile.bio}
-          </p>
-        )}
-        {Array.isArray(profile.buttons) && profile.buttons.length > 0 && (
-          <div style={{ display: "flex", flexWrap: "wrap", gap: "0.5rem", justifyContent: "center", marginTop: "1.5rem" }}>
-            {profile.buttons.map((b, i) => (
+        <div className={styles.handle}>vail.gg/{user.username}</div>
+        {profile?.bio && <p className={styles.bio}>{profile.bio}</p>}
+
+        <ProfileWidgets username={user.username} enabled={profile?.widgets} />
+
+        {Array.isArray(profile?.buttons) && profile.buttons.length > 0 && (
+          <div className={styles.buttons}>
+            {profile.buttons.map((b, i) =>
               b.label && b.url ? (
-                <a
-                  key={i}
-                  href={b.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  style={{
-                    border: `1px solid ${profile.accent_color}`, color: profile.accent_color,
-                    borderRadius: "0.375rem", padding: "0.5rem 1rem", fontSize: "0.8125rem",
-                    textDecoration: "none",
-                  }}
-                >
+                <a key={i} className={styles.buttonLink} href={b.url} target="_blank" rel="noopener noreferrer">
                   {b.label}
                 </a>
               ) : null
-            ))}
+            )}
           </div>
         )}
+
+        <div className={styles.footer}>
+          <a href="/">made with vail</a>
+        </div>
       </div>
     </main>
   );

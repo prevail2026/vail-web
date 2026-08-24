@@ -1,0 +1,68 @@
+:root {
+  --bg: #08090d;
+  --bg-elevated: #0f1119;
+  --bg-card: #0d0f16;
+  --border: rgba(231, 233, 238, 0.09);
+  --border-strong: rgba(231, 233, 238, 0.16);
+  --text: #eef0f4;
+  --text-dim: #8b90a0;
+  --text-faint: #565b6b;
+  --accent: #a48cff;
+  --accent-soft: rgba(164, 140, 255, 0.14);
+  --accent-2: #6ee7c4;
+  --danger: #f2606a;
+  --radius: 0.6rem;
+  --font-display: "Space Grotesk", ui-sans-serif, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  color-scheme: dark;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-mono);
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea,
+select {
+  font-family: inherit;
+}
+
+::selection {
+  background: var(--accent-soft);
+  color: var(--text);
+}
+
+/* subtle grain so large dark fields don't look flat/banded */
+.vail-grain {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.5;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/></filter><rect width='100%25' height='100%25' filter='url(%23n)' opacity='0.4'/></svg>");
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
