@@ -4,7 +4,7 @@ import { supabase } from "@/lib/supabase";
 const ALLOWED_FONTS = ["JetBrains Mono", "Inter", "Space Grotesk", "IBM Plex Mono"];
 
 export async function POST(request) {
-  const session = getSessionFromCookies(request.headers.get("cookie"));
+  const session = await getSessionFromCookies(request.headers.get("cookie"));
   if (!session) {
     return Response.json({ error: "unauthorized" }, { status: 401 });
   }
