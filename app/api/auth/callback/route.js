@@ -51,7 +51,7 @@ export async function GET(request) {
       });
     }
 
-    const session = signSession({ id: discordUser.id, username: discordUser.username });
+    const session = await signSession({ id: discordUser.id, username: discordUser.username });
     const headers = new Headers();
     headers.append("Set-Cookie", sessionCookieHeader(session));
     headers.append("Location", `${url.origin}/dashboard`);
